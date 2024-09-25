@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.9</title>
+    <title>Image Viewer v2.0</title>
     <style>
         body, html {
             margin: 0;
@@ -79,6 +79,8 @@
             let isDragging = false;
             let startX, startY;
             let translateX = 0, translateY = 0;
+            let velocityX = 0, velocityY = 0; // För inertia
+            let isPanning = false;
 
             // Uppdatera versionInfo med rätt zoomnivå och storlek
             function updateInfo() {
@@ -96,7 +98,7 @@
                     Double click to zoom.<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    Site v1.9
+                    Site v2.0
                 `;
             }
 
@@ -128,6 +130,7 @@
             img.addEventListener('mousedown', function(e) {
                 if (zoomLevel > 0) {
                     isDragging = true;
+                    isPanning = true;
                     startX = e.clientX - translateX;
                     startY = e.clientY - translateY;
                     img.style.cursor = 'grabbing';
@@ -137,8 +140,13 @@
 
             img.addEventListener('mousemove', function(e) {
                 if (isDragging) {
-                    translateX = e.clientX - startX;
-                    translateY = e.clientY - startY;
+                    // Minska rörelsekänsligheten för att få mjukare pan
+                    velocityX = (e.clientX - startX - translateX) * 0.1;
+                    velocityY = (e.clientY - startY - translateY) * 0.1;
+
+                    translateX += velocityX;
+                    translateY += velocityY;
+
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                 }
             });
@@ -146,12 +154,32 @@
             img.addEventListener('mouseup', function() {
                 isDragging = false;
                 img.style.cursor = 'grab';
+                if (isPanning) {
+                    inertiaPan();
+                }
             });
 
             img.addEventListener('mouseleave', function() {
                 isDragging = false;
                 img.style.cursor = 'grab';
             });
+
+            // Funktion för att ge en liten tröghetseffekt vid pan
+            function inertiaPan() {
+                if (Math.abs(velocityX) > 0.1 || Math.abs(velocityY) > 0.1) {
+                    translateX += velocityX;
+                    translateY += velocityY;
+
+                    velocityX *= 0.95; // Minska hastigheten för tröghet
+                    velocityY *= 0.95;
+
+                    img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+
+                    requestAnimationFrame(inertiaPan); // Fortsätt animera tills hastigheten är låg
+                } else {
+                    isPanning = false; // Avsluta pan
+                }
+            }
 
             // När bilden laddas, visa dimensioner och info
             img.onload = function() {
