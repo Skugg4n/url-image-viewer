@@ -5,45 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Viewer</title>
     <style>
-        /* Se till att body och html fyller hela sidan */
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #f0f0f0;
         }
 
-        /* Gör så att bilden anpassar sig till fönstret */
-        img {
+        /* Style för att se till att bilden passar in i browsern utan att beskäras */
+        .image-container {
             max-width: 100%;
             max-height: 100vh;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            object-fit: contain; /* Ser till att hela bilden syns utan beskärning */
-        }
-
-        /* Fullstorleksläge */
-        .fullsize {
-            width: auto;
-            height: auto;
-            max-width: none;
-            max-height: none;
-            object-fit: contain;
-        }
-
-        /* För att centrera bilden även när den är i fullstorlek */
-        .image-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Ger möjlighet att scrolla om bilden är för stor */
+            overflow: hidden; /* Förhindrar att något går utanför fönstret */
         }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            object-fit: contain; /* Förhindrar beskärning av bilden */
+        }
+
+        /* När bilden är zoomad in */
+        .zoomed {
+            transform: scale(2); /* Zoomar in bilden till 200% */
+        }
+
     </style>
 </head>
 <body>
@@ -63,12 +57,15 @@
             img.src = imageUrl;
             img.alt = 'Image';
 
-            // Klick-funktion för att växla mellan zoom-läge och normal-läge
+            // Klick-funktion för att växla mellan zoomad och normal storlek
+            var isZoomed = false;
             img.addEventListener('click', function() {
-                if (img.classList.contains('fullsize')) {
-                    img.classList.remove('fullsize');
+                if (isZoomed) {
+                    img.classList.remove('zoomed');
+                    isZoomed = false;
                 } else {
-                    img.classList.add('fullsize');
+                    img.classList.add('zoomed');
+                    isZoomed = true;
                 }
             });
 
