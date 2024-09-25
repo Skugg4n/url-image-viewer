@@ -3,13 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Image Viewer</title>
+    <title>Image Viewer</title>
+    <style>
+        /* Gör så att bilden anpassar sig till fönstret */
+        img {
+            max-width: 100%;
+            max-height: 100vh;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        /* Stora versionen (100%) av bilden */
+        .fullsize {
+            width: auto;
+            height: auto;
+            max-width: none;
+            max-height: none;
+        }
+        /* Centrerar innehållet */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Dynamic Image Viewer</h1>
-    <div id="imageContainer">
-        <!-- The image will be shown here -->
-    </div>
+
+    <div id="imageContainer"></div>
 
     <script>
         function getQueryParam(param) {
@@ -24,7 +48,15 @@
             img.src = imageUrl;
             img.alt = 'Image';
 
-            // Add the img element to the container
+            // Lägg till klick-funktion för att visa bilden i 100%
+            img.addEventListener('click', function() {
+                if (img.classList.contains('fullsize')) {
+                    img.classList.remove('fullsize');
+                } else {
+                    img.classList.add('fullsize');
+                }
+            });
+
             imageContainer.appendChild(img);
         } else {
             document.getElementById('imageContainer').innerHTML = 'No image URL provided.';
