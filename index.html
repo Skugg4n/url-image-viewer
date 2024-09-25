@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.8</title>
+    <title>Image Viewer v1.9</title>
     <style>
         body, html {
             margin: 0;
@@ -11,7 +11,7 @@
             height: 100%;
             overflow: hidden;
             background-color: #f0f0f0;
-            font-family: 'Arial', sans-serif; /* Använder en sans-serif font */
+            font-family: 'Arial', sans-serif;
         }
 
         .image-container {
@@ -45,8 +45,8 @@
             padding: 5px 10px;
             font-size: 12px;
             border-radius: 5px;
-            text-align: right; /* Högerjusterar texten */
-            font-family: 'Arial', sans-serif; /* Använder sans-serif */
+            text-align: right;
+            font-family: 'Arial', sans-serif;
         }
     </style>
 </head>
@@ -75,7 +75,6 @@
             img.alt = 'Image';
             var versionInfo = document.getElementById('versionInfo');
 
-            let scale = 1;
             let zoomLevel = 0; // 0 = anpassad, 1 = 100%, 2 = 200%
             let isDragging = false;
             let startX, startY;
@@ -97,21 +96,21 @@
                     Double click to zoom.<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    Site v1.8
+                    Site v1.9
                 `;
             }
 
             // Hantera dubbelklick för att zooma
             img.addEventListener('dblclick', function(e) {
                 if (zoomLevel === 0) {
-                    // Zooma in till 100%
+                    // Zooma in till 100% av bildens naturliga storlek
                     zoomLevel = 1;
-                    img.style.transform = `scale(1) translate(${translateX}px, ${translateY}px)`;
+                    img.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else if (zoomLevel === 1) {
                     // Zooma in till 200%
                     zoomLevel = 2;
-                    img.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
+                    img.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else {
                     // Återgå till anpassad storlek
@@ -140,7 +139,7 @@
                 if (isDragging) {
                     translateX = e.clientX - startX;
                     translateY = e.clientY - startY;
-                    img.style.transform = `scale(${zoomLevel}) translate(${translateX}px, ${translateY}px)`;
+                    img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                 }
             });
 
