@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.6</title>
+    <title>Image Viewer v1.7</title>
     <style>
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden; /* Förhindra att sidan scrollar */
+            overflow: hidden;
             background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif; /* Använder en sans-serif font */
         }
 
         .image-container {
@@ -19,20 +20,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden; /* Håller bilden inom fönstret */
+            overflow: hidden;
             position: relative;
-            cursor: grab; /* Visar att man kan dra runt bilden */
+            cursor: grab;
         }
 
         img {
             max-width: 100%;
             max-height: 100%;
             transition: transform 0.3s ease;
-            transform-origin: center; /* Låt oss zooma in från klickpunkten */
+            transform-origin: center;
         }
 
         .zoomed {
-            cursor: grab; /* För pan när inzoomad */
+            cursor: grab;
         }
 
         .version {
@@ -44,7 +45,8 @@
             padding: 5px 10px;
             font-size: 12px;
             border-radius: 5px;
-            text-align: left;
+            text-align: right; /* Högerjusterar texten */
+            font-family: 'Arial', sans-serif; /* Använder sans-serif */
         }
     </style>
 </head>
@@ -55,7 +57,9 @@
     </div>
 
     <!-- Versionsindikator och bildinfo -->
-    <div id="versionInfo" class="version">Version 1.6</div>
+    <div id="versionInfo" class="version">
+        Loading...
+    </div>
 
     <script>
         function getQueryParam(param) {
@@ -124,35 +128,17 @@
                 img.style.cursor = 'grab';
             });
 
-            // När bilden laddas, visa dimensioner och filinformation
+            // När bilden laddas, visa dimensioner och enkel info
             img.onload = function() {
                 const width = img.naturalWidth;
                 const height = img.naturalHeight;
-                const fileFormat = imageUrl.split('.').pop().toUpperCase();
 
-                // Visa dimensioner och filformat
+                // Visa dimensioner och version
                 versionInfo.innerHTML = `
-                    Version 1.6<br>
-                    Dimensions: ${width} x ${height} px<br>
-                    Format: ${fileFormat}<br>
-                    Estimated Size: Calculating...<br>
-                    Color Mode: RGB (assumed)
+                    Double click to zoom.<br>
+                    Img size: ${width} x ${height} px<br>
+                    Site v1.7
                 `;
-
-                // Hämta filstorleken (tyvärr inte möjligt via JS direkt, approximation om möjligt)
-                fetch(imageUrl, { method: 'HEAD' }).then(response => {
-                    const size = response.headers.get('content-length');
-                    if (size) {
-                        const sizeInMB = (size / (1024 * 1024)).toFixed(2);
-                        versionInfo.innerHTML = `
-                            Version 1.6<br>
-                            Dimensions: ${width} x ${height} px<br>
-                            Format: ${fileFormat}<br>
-                            Size: ${sizeInMB} MB<br>
-                            Color Mode: RGB (assumed)
-                        `;
-                    }
-                });
             };
 
             imageContainer.appendChild(img);
