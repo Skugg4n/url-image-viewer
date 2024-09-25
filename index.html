@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.1</title> <!-- Versionsnumret syns i fliken -->
+    <title>Image Viewer v1.2</title>
     <style>
         body, html {
             margin: 0;
@@ -16,8 +16,8 @@
         }
 
         .image-container {
-            max-width: 100%;
-            max-height: 100vh;
+            width: 100%;
+            height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,16 +26,19 @@
 
         img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 100vh;
             cursor: pointer;
-            transition: transform 0.3s ease;
-            object-fit: contain; /* Förhindrar beskärning av bilden */
+            transition: transform 0.3s ease, width 0.3s ease, height 0.3s ease;
+            object-fit: contain; /* Visar hela bilden utan beskärning */
         }
 
         /* När bilden är zoomad in */
         .zoomed {
+            width: auto;
+            height: auto;
+            max-width: none;
+            max-height: none;
             transform: scale(2); /* Zoomar in bilden till 200% */
-            cursor: move; /* Förändrar markören för att indikera att man kan dra */
         }
 
         /* Style för versionsindikatorn */
@@ -49,7 +52,6 @@
             font-size: 12px;
             border-radius: 5px;
         }
-
     </style>
 </head>
 <body>
@@ -57,7 +59,7 @@
     <div id="imageContainer" class="image-container"></div>
 
     <!-- Versionsindikator -->
-    <div class="version">Version 1.1</div>
+    <div class="version">Version 1.2</div>
 
     <script>
         function getQueryParam(param) {
