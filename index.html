@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Image Viewer</title>
+</head>
+<body>
+    <h1>Dynamic Image Viewer</h1>
+    <div id="imageContainer">
+        <!-- The image will be shown here -->
+    </div>
+
+    <script>
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var imageUrl = getQueryParam('imageUrl');
+        if (imageUrl) {
+            var imageContainer = document.getElementById('imageContainer');
+            var img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'Image';
+
+            // Add the img element to the container
+            imageContainer.appendChild(img);
+        } else {
+            document.getElementById('imageContainer').innerHTML = 'No image URL provided.';
+        }
+    </script>
+</body>
+</html>
