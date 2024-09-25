@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.4</title>
+    <title>Image Viewer v1.5</title>
     <style>
         body, html {
             margin: 0;
@@ -28,6 +28,7 @@
             max-width: 100%;
             max-height: 100%;
             transition: transform 0.3s ease;
+            transform-origin: center; /* Låt oss zooma in från klickpunkten */
         }
 
         .zoomed {
@@ -53,7 +54,7 @@
     </div>
 
     <!-- Versionsindikator -->
-    <div class="version">Version 1.4</div>
+    <div class="version">Version 1.5</div>
 
     <script>
         function getQueryParam(param) {
@@ -73,10 +74,17 @@
             let startX, startY;
             let translateX = 0, translateY = 0;
 
-            img.addEventListener('dblclick', function() {
+            // Dubbelklick för att zooma in vid klickpunkten
+            img.addEventListener('dblclick', function(e) {
                 if (scale === 1) {
                     scale = 2; // Zooma till 200%
-                    img.style.transform = `scale(${scale})`;
+                    const rect = img.getBoundingClientRect();
+                    const offsetX = e.clientX - rect.left;
+                    const offsetY = e.clientY - rect.top;
+                    
+                    // Zooma in från klickpunkten
+                    img.style.transformOrigin = `${offsetX}px ${offsetY}px`;
+                    img.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else {
                     scale = 1; // Återställ zoom
@@ -94,6 +102,7 @@
                     startX = e.clientX - translateX;
                     startY = e.clientY - translateY;
                     img.style.cursor = 'grabbing';
+                    e.preventDefault(); // Förhindrar att markören blir konstig
                 }
             });
 
