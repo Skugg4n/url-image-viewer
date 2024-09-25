@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v1.7</title>
+    <title>Image Viewer v1.8</title>
     <style>
         body, html {
             margin: 0;
@@ -76,32 +76,58 @@
             var versionInfo = document.getElementById('versionInfo');
 
             let scale = 1;
+            let zoomLevel = 0; // 0 = anpassad, 1 = 100%, 2 = 200%
             let isDragging = false;
             let startX, startY;
             let translateX = 0, translateY = 0;
 
-            // Hantera dubbelklick för att zooma in där man klickar
+            // Uppdatera versionInfo med rätt zoomnivå och storlek
+            function updateInfo() {
+                const width = img.naturalWidth;
+                const height = img.naturalHeight;
+                let zoomText = "";
+
+                if (zoomLevel === 1) {
+                    zoomText = "Zoom: 100%";
+                } else if (zoomLevel === 2) {
+                    zoomText = "Zoom: 200%";
+                }
+
+                versionInfo.innerHTML = `
+                    Double click to zoom.<br>
+                    ${zoomText}<br>
+                    Img size: ${width} x ${height} px<br>
+                    Site v1.8
+                `;
+            }
+
+            // Hantera dubbelklick för att zooma
             img.addEventListener('dblclick', function(e) {
-                if (scale === 1) {
-                    scale = 2;
-                    const rect = img.getBoundingClientRect();
-                    const offsetX = e.clientX - rect.left;
-                    const offsetY = e.clientY - rect.top;
-                    img.style.transformOrigin = `${offsetX}px ${offsetY}px`;
-                    img.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+                if (zoomLevel === 0) {
+                    // Zooma in till 100%
+                    zoomLevel = 1;
+                    img.style.transform = `scale(1) translate(${translateX}px, ${translateY}px)`;
+                    img.classList.add('zoomed');
+                } else if (zoomLevel === 1) {
+                    // Zooma in till 200%
+                    zoomLevel = 2;
+                    img.style.transform = `scale(2) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else {
-                    scale = 1;
-                    img.style.transform = `scale(${scale}) translate(0px, 0px)`;
+                    // Återgå till anpassad storlek
+                    zoomLevel = 0;
+                    img.style.transform = `scale(1) translate(0px, 0px)`;
                     img.classList.remove('zoomed');
                     translateX = 0;
                     translateY = 0;
                 }
+
+                updateInfo();
             });
 
             // Hantera pan när inzoomad
             img.addEventListener('mousedown', function(e) {
-                if (scale > 1) {
+                if (zoomLevel > 0) {
                     isDragging = true;
                     startX = e.clientX - translateX;
                     startY = e.clientY - translateY;
@@ -114,7 +140,7 @@
                 if (isDragging) {
                     translateX = e.clientX - startX;
                     translateY = e.clientY - startY;
-                    img.style.transform = `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+                    img.style.transform = `scale(${zoomLevel}) translate(${translateX}px, ${translateY}px)`;
                 }
             });
 
@@ -128,17 +154,9 @@
                 img.style.cursor = 'grab';
             });
 
-            // När bilden laddas, visa dimensioner och enkel info
+            // När bilden laddas, visa dimensioner och info
             img.onload = function() {
-                const width = img.naturalWidth;
-                const height = img.naturalHeight;
-
-                // Visa dimensioner och version
-                versionInfo.innerHTML = `
-                    Double click to zoom.<br>
-                    Img size: ${width} x ${height} px<br>
-                    Site v1.7
-                `;
+                updateInfo(); // Visa info direkt när bilden laddas
             };
 
             imageContainer.appendChild(img);
