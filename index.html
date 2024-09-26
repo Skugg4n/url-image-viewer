@@ -99,7 +99,7 @@
                     Click & drag to pan<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    site v2.5
+                    site v2.6
                 `;
             }
 
@@ -171,8 +171,8 @@
                     translateX += velocityX;
                     translateY += velocityY;
 
-                    velocityX *= 2; // Minska hastigheten för tröghet
-                    velocityY *= 2;
+                    velocityX *= 0.1; // Minska hastigheten för tröghet
+                    velocityY *= 0.1;
 
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
 
