@@ -184,3 +184,12 @@ body.transparent {
 body {
     background-color: #f0f0f0; /* default background color */
 }
+
+.corner-logo {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    width: 100px; 
+    height: auto;
+    z-index: 1000; 
+}
