@@ -6,6 +6,7 @@ function getQueryParam(param) {
 var imageUrl = getQueryParam('imageUrl');
 if (imageUrl) {
     var imageContainer = document.getElementById('imageContainer');
+    var zoomPanContainer = document.getElementById('zoomPanContainer');
     var img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
@@ -44,18 +45,18 @@ if (imageUrl) {
         if (zoomLevel === 0) {
             // Zoom in to 100% of image's natural size
             zoomLevel = 1;
-            img.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
-            img.classList.add('zoomed');
+            zoomPanContainer.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+            zoomPanContainer.classList.add('zoomed');
         } else if (zoomLevel === 1) {
             // Zoom in to 200%
             zoomLevel = 2;
-            img.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
-            img.classList.add('zoomed');
+            zoomPanContainer.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+            zoomPanContainer.classList.add('zoomed');
         } else {
             // Reset to fit-to-screen size
             zoomLevel = 0;
-            img.style.transform = `scale(1) translate(0px, 0px)`;
-            img.classList.remove('zoomed');
+            zoomPanContainer.style.transform = `scale(1) translate(0px, 0px)`;
+            zoomPanContainer.classList.remove('zoomed');
             translateX = 0;
             translateY = 0;
         }
@@ -69,7 +70,7 @@ if (imageUrl) {
             isDragging = true;
             startX = e.clientX - translateX;
             startY = e.clientY - translateY;
-            img.style.cursor = 'grabbing';
+            zoomPanContainer.style.cursor = 'grabbing';
             e.preventDefault();
         }
     });
@@ -78,18 +79,18 @@ if (imageUrl) {
         if (isDragging) {
             translateX = e.clientX - startX;
             translateY = e.clientY - startY;
-            img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+            zoomPanContainer.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
         }
     });
 
     img.addEventListener('mouseup', function() {
         isDragging = false;
-        img.style.cursor = 'grab';
+        zoomPanContainer.style.cursor = 'grab';
     });
 
     img.addEventListener('mouseleave', function() {
         isDragging = false;
-        img.style.cursor = 'grab';
+        zoomPanContainer.style.cursor = 'grab';
     });
 
     // When the image is loaded, show dimensions and set the download link
@@ -107,7 +108,7 @@ if (imageUrl) {
         });
     });
 
-    imageContainer.appendChild(img);
+    zoomPanContainer.appendChild(img);
 } else {
     document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
 }

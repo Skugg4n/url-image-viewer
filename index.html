@@ -7,11 +7,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="imageContainer" class="image-container"></div>
+    <div id="imageContainer" class="image-container">
+        <div id="zoomPanContainer"></div>
+    </div>
     <div id="versionInfo" class="version">Loading...</div>
-    <a id="downloadBtn" class="btn" href="#" download>Download</a>
-    <button id="copyBtn" class="btn">Copy img URL</button>
-
+    <div class="button-container">
+        <a id="downloadBtn" class="btn" href="#" download>Download</a>
+        <button id="copyBtn" class="btn">Copy img URL</button>
+        <button id="playlistBtn" class="btn">Playlist Artwork</button>
+        <button id="mobileHeaderBtn" class="btn">Mobile Header</button>
+        <button id="desktopHeaderBtn" class="btn">Desktop Header</button>
+    </div>
     <script src="scripts.js"></script>
     <script src="headerOverlays.js"></script>
 </body>

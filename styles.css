@@ -6,6 +6,7 @@ body, html {
     background-color: #f0f0f0;
     font-family: 'Arial', sans-serif;
 }
+
 .image-container {
     width: 100%;
     height: 100%;
@@ -14,17 +15,23 @@ body, html {
     align-items: center;
     overflow: hidden;
     position: relative;
+}
+
+#zoomPanContainer {
+    position: relative;
     cursor: grab;
 }
+
 img {
     max-width: 100%;
     max-height: 100%;
-    transition: transform 0.3s ease;
-    transform-origin: center;
+    display: block;
 }
+
 .zoomed {
     cursor: grab;
 }
+
 .version {
     position: fixed;
     bottom: 10px;
@@ -37,10 +44,14 @@ img {
     text-align: right;
     font-family: 'Arial', sans-serif;
 }
-.btn {
+
+.button-container {
     position: fixed;
     top: 10px;
     right: 10px;
+}
+
+.btn {
     background-color: #000; /* Black background */
     color: #fff; /* White text */
     padding: 10px;
@@ -48,13 +59,28 @@ img {
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
-    display: inline-block;
-    margin-right: 10px;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .btn:hover {
     background-color: #333; /* Darker grey on hover */
 }
-#copyBtn {
-    right: 130px;
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.overlay-frame {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px dashed red;
+    pointer-events: none;
 }
