@@ -37,9 +37,9 @@
         } else if (type === 'mobileHeader') {
             aspectRatio = 750 / 760; // 750:760
             if (window.innerWidth < 500) {
-                windowWidth = 350;
+                windowWidth = 300;
             } else {
-                windowWidth = 700;
+                windowWidth = 600;
             }
             windowHeight = windowWidth / aspectRatio;
         } else if (type === 'desktopHeader') {
