@@ -48,9 +48,10 @@
             windowHeight = windowWidth / aspectRatio;
         }
 
-        // Store overlay window dimensions for potential future use
+        // Store overlay window dimensions for size warning calculations
         window.overlayWindowWidth = windowWidth;
         window.overlayWindowHeight = windowHeight;
+        window.currentOverlayType = type;
 
         // Calculate wall dimensions
         var leftWallWidth = (window.innerWidth - windowWidth) / 2;
@@ -95,6 +96,11 @@
 
         // Append overlay to imageContainer
         imageContainer.appendChild(overlay);
+
+        // Update size warning
+        if (typeof updateInfo === 'function') {
+            updateInfo();
+        }
     }
 
     function toggleOverlay(type, button) {
@@ -108,6 +114,10 @@
                 button.classList.remove('active');
                 window.overlayWindowWidth = 0;
                 window.overlayWindowHeight = 0;
+                window.currentOverlayType = null;
+                if (typeof updateInfo === 'function') {
+                    updateInfo();
+                }
             }
         } else {
             currentOverlayType = type;

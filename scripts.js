@@ -11,6 +11,7 @@ if (imageUrl) {
     var img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
+    img.style.display = 'none'; // Hide until loaded
     var versionInfo = document.getElementById('versionInfo');
     var downloadBtn = document.getElementById('downloadBtn');
     var copyBtn = document.getElementById('copyBtn');
@@ -29,22 +30,51 @@ if (imageUrl) {
         const width = img.naturalWidth;
         const height = img.naturalHeight;
 
-        // Calculate display width
-        let displayedWidth = img.clientWidth * zoomLevel;
-        let zoomPercentage = ((displayedWidth / img.naturalWidth) * 100).toFixed(1);
-
+        let zoomPercentage = (zoomLevel * 100).toFixed(1);
         let zoomText = `Zoom: ${zoomPercentage}%`;
 
         let transparencyText = imageHasTransparency ? "Image has transparency<br>" : "";
+
+        let sizeWarning = getSizeWarning();
 
         versionInfo.innerHTML = `
             Use zoom slider or Alt + Scroll Wheel to zoom<br>
             Click & drag to pan<br>
             ${zoomText}<br>
             ${transparencyText}
+            ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.2
+            site v3.3
         `;
+    }
+
+    function getSizeWarning() {
+        if (!currentOverlayType) return '';
+        if (overlayWindowWidth === 0 || overlayWindowHeight === 0) return '';
+
+        let requiredWidth;
+        let requiredHeight;
+        if (currentOverlayType === 'playlist') {
+            requiredWidth = 1280;
+            requiredHeight = 1280;
+        } else if (currentOverlayType === 'mobileHeader') {
+            requiredWidth = 750;
+            requiredHeight = 760;
+        } else if (currentOverlayType === 'desktopHeader') {
+            requiredWidth = 2660;
+            requiredHeight = 1496;
+        }
+
+        // Calculate effective image size in the window
+        let scale = zoomLevel * (overlayWindowWidth / window.innerWidth);
+        let effectiveWidth = img.naturalWidth * scale;
+        let effectiveHeight = img.naturalHeight * scale;
+
+        if (effectiveWidth < requiredWidth || effectiveHeight < requiredHeight) {
+            return `<span style="color: red;">Warning: Image resolution may be too low for this overlay.</span><br>`;
+        } else {
+            return '';
+        }
     }
 
     // Update the zoom level based on the slider
@@ -121,18 +151,26 @@ if (imageUrl) {
 
     // When the image is loaded, show dimensions and set the download link
     img.onload = function() {
+        // Hide any error message
+        errorMessage.style.display = 'none';
+        img.style.display = 'block';
+
         // Reset zoom level to fit the image to the container
-        let containerAspectRatio = imageContainer.clientWidth / imageContainer.clientHeight;
+        let containerWidth = imageContainer.clientWidth;
+        let containerHeight = imageContainer.clientHeight;
+
         let imageAspectRatio = img.naturalWidth / img.naturalHeight;
+        let containerAspectRatio = containerWidth / containerHeight;
 
         if (imageAspectRatio > containerAspectRatio) {
-            // Image is wider
-            zoomLevel = imageContainer.clientWidth / img.naturalWidth;
+            // Image is wider than container
+            zoomLevel = containerWidth / img.naturalWidth;
         } else {
-            // Image is taller
-            zoomLevel = imageContainer.clientHeight / img.naturalHeight;
+            // Image is taller than container
+            zoomLevel = containerHeight / img.naturalHeight;
         }
 
+        // Set zoom slider value
         zoomSlider.value = (zoomLevel * 100).toFixed(1);
 
         updateTransform();
@@ -144,6 +182,7 @@ if (imageUrl) {
     img.onerror = function() {
         errorMessage.style.display = 'block';
         errorMessage.innerText = 'Cannot load image preview.\nUnsupported image format or broken link.';
+        img.style.display = 'none'; // Hide the broken image icon
     };
 
     // Handle copying the image URL to the clipboard
@@ -162,6 +201,12 @@ if (imageUrl) {
             notification.style.display = 'none';
         }, 2000); // Hide after 2 seconds
     }
+
+    // Open image in new tab when download button is clicked
+    downloadBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.open(img.src, '_blank');
+    });
 
     zoomPanContainer.appendChild(img);
 } else {
