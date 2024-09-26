@@ -37,10 +37,8 @@ img {
     text-align: right;
     font-family: 'Arial', sans-serif;
 }
+/* General button styling */
 .btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
     background-color: #000; /* Black background */
     color: #fff; /* White text */
     padding: 10px;
@@ -49,14 +47,16 @@ img {
     border-radius: 5px;
     cursor: pointer;
     display: inline-block;
-    margin-right: 10px;
+    margin-bottom: 10px; /* Ensure spacing between buttons */
 }
+
 
 .btn:hover {
     background-color: #333; /* Darker grey on hover */
 }
 #copyBtn {
-    right: 130px;
+    top: 60px; /* Push this button below the Download button */
+    right: 10px;
 }
 .overlay {
     position: absolute;
@@ -88,4 +88,17 @@ img {
     color: white;
     padding: 5px;
     font-size: 12px;
+}
+#coverBtn {
+    top: 110px; /* Position below Copy Button */
+    right: 10px;
+}
+#mobileHeaderBtn {
+    top: 160px; /* Position below Cover Button */
+    right: 10px;
+}
+
+#desktopHeaderBtn {
+    top: 210px; /* Position below Mobile Header Button */
+    right: 10px;
 }

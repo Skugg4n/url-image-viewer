@@ -16,9 +16,17 @@ document.addEventListener('DOMContentLoaded', function () {
         toggleOverlay(desktopHeaderOverlay);
     });
 
-    function toggleOverlay(overlay) {
-        const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
-        overlays.forEach(o => o.style.display = 'none'); // Hide all overlays
-        overlay.style.display = 'block'; // Show the selected overlay
+function toggleOverlay(overlay) {
+    const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
+
+    // If the clicked overlay is already visible, hide it
+    if (overlay.style.display === 'block') {
+        overlay.style.display = 'none';
+    } else {
+        // Hide all overlays and only show the clicked one
+        overlays.forEach(o => o.style.display = 'none');
+        overlay.style.display = 'block';
     }
+}
+
 });
