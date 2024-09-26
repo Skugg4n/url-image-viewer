@@ -107,3 +107,28 @@ if (imageUrl) {
 } else {
     document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
 }
+// Background toggle functionality
+(function() {
+    var bgButtons = document.querySelectorAll('.bg-btn');
+
+    bgButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            bgButtons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            // Add active class to the clicked button
+            this.classList.add('active');
+
+            var bg = this.getAttribute('data-bg');
+            document.body.classList.remove('transparent');
+            document.body.style.backgroundColor = '';
+
+            if (bg === 'transparent') {
+                document.body.classList.add('transparent');
+            } else {
+                document.body.style.backgroundColor = bg;
+            }
+        });
+    });
+})();
