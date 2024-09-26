@@ -142,8 +142,8 @@
             img.addEventListener('mousemove', function(e) {
                 if (isDragging) {
                     // Minska rörelsekänsligheten för att få mjukare pan
-                    velocityX = (e.clientX - startX - translateX) * 0.4;
-                    velocityY = (e.clientY - startY - translateY) * 0.4;
+                    velocityX = (e.clientX - startX - translateX) * 1;
+                    velocityY = (e.clientY - startY - translateY) * 1;
 
                     translateX += velocityX;
                     translateY += velocityY;
@@ -171,8 +171,8 @@
                     translateX += velocityX;
                     translateY += velocityY;
 
-                    velocityX *= 0.1; // Minska hastigheten för tröghet
-                    velocityY *= 0.1;
+                    velocityX *= 0.8; // Minska hastigheten för tröghet
+                    velocityY *= 0.8;
 
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
 
