@@ -96,9 +96,10 @@
 
                 versionInfo.innerHTML = `
                     Double click to zoom.<br>
+                    Click drag to pan.<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    Site v2.0
+                    site v2.1
                 `;
             }
 
@@ -141,8 +142,8 @@
             img.addEventListener('mousemove', function(e) {
                 if (isDragging) {
                     // Minska rörelsekänsligheten för att få mjukare pan
-                    velocityX = (e.clientX - startX - translateX) * 0.1;
-                    velocityY = (e.clientY - startY - translateY) * 0.1;
+                    velocityX = (e.clientX - startX - translateX) * 0.2;
+                    velocityY = (e.clientY - startY - translateY) * 0.2;
 
                     translateX += velocityX;
                     translateY += velocityY;
@@ -170,8 +171,8 @@
                     translateX += velocityX;
                     translateY += velocityY;
 
-                    velocityX *= 0.95; // Minska hastigheten för tröghet
-                    velocityY *= 0.95;
+                    velocityX *= 0.5; // Minska hastigheten för tröghet
+                    velocityY *= 0.5;
 
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
 
