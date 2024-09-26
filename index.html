@@ -95,11 +95,11 @@
                 }
 
                 versionInfo.innerHTML = `
-                    Double click to zoom.<br>
-                    Click drag to pan.<br>
+                    Double click to zoom<br>
+                    Click & drag to pan<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    site v2.1
+                    site v2.2
                 `;
             }
 
@@ -171,8 +171,8 @@
                     translateX += velocityX;
                     translateY += velocityY;
 
-                    velocityX *= 0.5; // Minska hastigheten för tröghet
-                    velocityY *= 0.5;
+                    velocityX *= 0.2; // Minska hastigheten för tröghet
+                    velocityY *= 0.2;
 
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
 
