@@ -4,23 +4,51 @@ function getQueryParam(param) {
 }
 
 var imageUrl = getQueryParam('imageUrl');
+var imageContainer = document.getElementById('imageContainer');
+var zoomPanContainer = document.getElementById('zoomPanContainer');
+var errorMessage = document.getElementById('errorMessage');
+var versionInfo = document.getElementById('versionInfo');
+var downloadBtn = document.getElementById('downloadBtn');
+var copyBtn = document.getElementById('copyBtn');
+var zoomSlider = document.getElementById('zoomSlider');
+let zoomLevel = 1; // Default zoom level is 1 (100%)
+let isDragging = false;
+let startX, startY;
+let translateX = 0, translateY = 0;
+let imageHasTransparency = false;
+let img;
+
+// Background toggle functionality
+(function() {
+    var bgButtons = document.querySelectorAll('.bg-btn');
+
+    bgButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            bgButtons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            // Add active class to the clicked button
+            this.classList.add('active');
+
+            var bg = this.getAttribute('data-bg');
+            document.body.classList.remove('transparent');
+            document.body.style.backgroundColor = '';
+
+            if (bg === 'transparent') {
+                document.body.classList.add('transparent');
+            } else {
+                document.body.style.backgroundColor = bg;
+            }
+        });
+    });
+})();
+
 if (imageUrl) {
-    var imageContainer = document.getElementById('imageContainer');
-    var zoomPanContainer = document.getElementById('zoomPanContainer');
-    var errorMessage = document.getElementById('errorMessage');
-    var img = document.createElement('img');
+    img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
     img.style.display = 'none'; // Hide until loaded
-    var versionInfo = document.getElementById('versionInfo');
-    var downloadBtn = document.getElementById('downloadBtn');
-    var copyBtn = document.getElementById('copyBtn');
-    var zoomSlider = document.getElementById('zoomSlider');
-    let zoomLevel = 1; // Default zoom level is 1 (100%)
-    let isDragging = false;
-    let startX, startY;
-    let translateX = 0, translateY = 0;
-    let imageHasTransparency = false;
 
     // Update versionInfo with correct zoom level and image size
     function updateInfo() {
@@ -41,7 +69,7 @@ if (imageUrl) {
             ${transparencyText}
             ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.4
+            site v3.5
         `;
     }
 
@@ -159,11 +187,11 @@ if (imageUrl) {
         let imageAspectRatio = img.naturalWidth / img.naturalHeight;
         let containerAspectRatio = containerWidth / containerHeight;
 
-        if (imageAspectRatio > containerAspectRatio) {
-            // Image is wider than container
+        if (imageAspectRatio >= containerAspectRatio) {
+            // Image is wider or equal in aspect ratio
             zoomLevel = containerWidth / img.naturalWidth;
         } else {
-            // Image is taller than container
+            // Image is taller
             zoomLevel = containerHeight / img.naturalHeight;
         }
 
@@ -201,31 +229,5 @@ if (imageUrl) {
 
     zoomPanContainer.appendChild(img);
 } else {
-    document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
+    versionInfo.innerHTML = 'No image URL provided.';
 }
-
-// Background toggle functionality
-(function() {
-    var bgButtons = document.querySelectorAll('.bg-btn');
-
-    bgButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            bgButtons.forEach(function(btn) {
-                btn.classList.remove('active');
-            });
-            // Add active class to the clicked button
-            this.classList.add('active');
-
-            var bg = this.getAttribute('data-bg');
-            document.body.classList.remove('transparent');
-            document.body.style.backgroundColor = '';
-
-            if (bg === 'transparent') {
-                document.body.classList.add('transparent');
-            } else {
-                document.body.style.backgroundColor = bg;
-            }
-        });
-    });
-})();
