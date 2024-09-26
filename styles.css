@@ -1,5 +1,4 @@
-/* General Styles */
-body {
+body, html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -12,7 +11,6 @@ body {
     height: 100%;
     overflow: hidden;
     position: relative;
-    background-color: #f0f0f0; /* default background color */
 }
 
 #zoomPanContainer {
@@ -174,13 +172,6 @@ body.transparent {
     );
 }
 
-/* Error message styling */
-.error-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    font-size: 18px;
-    text-align: center;
+body {
+    background-color: #f0f0f0; /* default background color */
 }

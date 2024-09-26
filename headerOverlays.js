@@ -37,9 +37,9 @@
         } else if (type === 'mobileHeader') {
             aspectRatio = 750 / 760; // 750:760
             if (window.innerWidth < 500) {
-                windowWidth = 300; // Slightly smaller
+                windowWidth = 350;
             } else {
-                windowWidth = 600; // Slightly smaller
+                windowWidth = 700;
             }
             windowHeight = windowWidth / aspectRatio;
         } else if (type === 'desktopHeader') {
@@ -51,7 +51,6 @@
         // Store overlay window dimensions for size warning calculations
         window.overlayWindowWidth = windowWidth;
         window.overlayWindowHeight = windowHeight;
-        window.currentOverlayType = type;
 
         // Calculate wall dimensions
         var leftWallWidth = (window.innerWidth - windowWidth) / 2;
@@ -114,7 +113,6 @@
                 button.classList.remove('active');
                 window.overlayWindowWidth = 0;
                 window.overlayWindowHeight = 0;
-                window.currentOverlayType = null;
                 if (typeof updateInfo === 'function') {
                     updateInfo();
                 }

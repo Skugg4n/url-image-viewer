@@ -4,59 +4,30 @@ function getQueryParam(param) {
 }
 
 var imageUrl = getQueryParam('imageUrl');
-var imageContainer = document.getElementById('imageContainer');
-var zoomPanContainer = document.getElementById('zoomPanContainer');
-var errorMessage = document.getElementById('errorMessage');
-var versionInfo = document.getElementById('versionInfo');
-var downloadBtn = document.getElementById('downloadBtn');
-var copyBtn = document.getElementById('copyBtn');
-var zoomSlider = document.getElementById('zoomSlider');
-let zoomLevel = 1; // Default zoom level is 1 (100%)
-let isDragging = false;
-let startX, startY;
-let translateX = 0, translateY = 0;
-let imageHasTransparency = false;
-let img;
-
-// Background toggle functionality
-(function() {
-    var bgButtons = document.querySelectorAll('.bg-btn');
-
-    bgButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            bgButtons.forEach(function(btn) {
-                btn.classList.remove('active');
-            });
-            // Add active class to the clicked button
-            this.classList.add('active');
-
-            var bg = this.getAttribute('data-bg');
-            document.body.classList.remove('transparent');
-            document.body.style.backgroundColor = '';
-
-            if (bg === 'transparent') {
-                document.body.classList.add('transparent');
-            } else {
-                document.body.style.backgroundColor = bg;
-            }
-        });
-    });
-})();
-
 if (imageUrl) {
-    img = document.createElement('img');
+    var imageContainer = document.getElementById('imageContainer');
+    var zoomPanContainer = document.getElementById('zoomPanContainer');
+    var img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
-    img.style.display = 'none'; // Hide until loaded
+    var versionInfo = document.getElementById('versionInfo');
+    var downloadBtn = document.getElementById('downloadBtn');
+    var copyBtn = document.getElementById('copyBtn');
+    var zoomSlider = document.getElementById('zoomSlider');
+    var currentOverlayType = null;
+    var overlayWindowWidth = 0;
+    var overlayWindowHeight = 0;
+    let zoomLevel = 1; // Default zoom level is 1 (100%)
+    let isDragging = false;
+    let startX, startY;
+    let translateX = 0, translateY = 0;
+    let imageHasTransparency = false;
 
     // Update versionInfo with correct zoom level and image size
     function updateInfo() {
         const width = img.naturalWidth;
         const height = img.naturalHeight;
-
-        let zoomPercentage = (zoomLevel * 100).toFixed(1);
-        let zoomText = `Zoom: ${zoomPercentage}%`;
+        let zoomText = `Zoom: ${Math.round(zoomLevel * 100)}%`;
 
         let transparencyText = imageHasTransparency ? "Image has transparency<br>" : "";
 
@@ -69,34 +40,34 @@ if (imageUrl) {
             ${transparencyText}
             ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.6
+            site v3.1
         `;
     }
 
     function getSizeWarning() {
-        if (!window.currentOverlayType) return '';
-        if (window.overlayWindowWidth === 0 || window.overlayWindowHeight === 0) return '';
+        if (!currentOverlayType) return '';
+        if (overlayWindowWidth === 0 || overlayWindowHeight === 0) return '';
 
         let requiredWidth;
         let requiredHeight;
-        if (window.currentOverlayType === 'playlist') {
+        if (currentOverlayType === 'playlist') {
             requiredWidth = 1280;
             requiredHeight = 1280;
-        } else if (window.currentOverlayType === 'mobileHeader') {
+        } else if (currentOverlayType === 'mobileHeader') {
             requiredWidth = 750;
             requiredHeight = 760;
-        } else if (window.currentOverlayType === 'desktopHeader') {
+        } else if (currentOverlayType === 'desktopHeader') {
             requiredWidth = 2660;
             requiredHeight = 1496;
         }
 
         // Calculate effective image size in the window
-        let scale = zoomLevel * (window.overlayWindowWidth / imageContainer.clientWidth);
+        let scale = zoomLevel * (overlayWindowWidth / window.innerWidth);
         let effectiveWidth = img.naturalWidth * scale;
         let effectiveHeight = img.naturalHeight * scale;
 
         if (effectiveWidth < requiredWidth || effectiveHeight < requiredHeight) {
-            return `<span style="color: red;">Resolution may be too low for this design.</span><br>`;
+            return `<span style="color: red;">Warning: Image resolution may be too low for this overlay.</span><br>`;
         } else {
             return '';
         }
@@ -176,38 +147,10 @@ if (imageUrl) {
 
     // When the image is loaded, show dimensions and set the download link
     img.onload = function() {
-        // Hide any error message
-        errorMessage.style.display = 'none';
-        img.style.display = 'block';
-
-        // Reset zoom level to fit the image to the container
-        let containerWidth = imageContainer.clientWidth;
-        let containerHeight = imageContainer.clientHeight;
-
-        let imageAspectRatio = img.naturalWidth / img.naturalHeight;
-        let containerAspectRatio = containerWidth / containerHeight;
-
-        if (imageAspectRatio >= containerAspectRatio) {
-            // Image is wider or equal in aspect ratio
-            zoomLevel = containerWidth / img.naturalWidth;
-        } else {
-            // Image is taller
-            zoomLevel = containerHeight / img.naturalHeight;
-        }
-
-        // Set zoom slider value
-        zoomSlider.value = (zoomLevel * 100).toFixed(1);
-
-        updateTransform();
-        updateInfo();
+        updateInfo(); // Display info immediately when the image loads
         downloadBtn.href = img.src; // Set download link to the image source
+        updateTransform(); // Initialize transform
         checkTransparency(); // Check if image has transparency
-    };
-
-    img.onerror = function() {
-        errorMessage.style.display = 'block';
-        errorMessage.innerText = 'Cannot load image preview.\nUnsupported image format or broken link.';
-        img.style.display = 'none'; // Hide the broken image icon
     };
 
     // Handle copying the image URL to the clipboard
@@ -229,5 +172,31 @@ if (imageUrl) {
 
     zoomPanContainer.appendChild(img);
 } else {
-    versionInfo.innerHTML = 'No image URL provided.';
+    document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
 }
+
+// Background toggle functionality
+(function() {
+    var bgButtons = document.querySelectorAll('.bg-btn');
+
+    bgButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            bgButtons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+            // Add active class to the clicked button
+            this.classList.add('active');
+
+            var bg = this.getAttribute('data-bg');
+            document.body.classList.remove('transparent');
+            document.body.style.backgroundColor = '';
+
+            if (bg === 'transparent') {
+                document.body.classList.add('transparent');
+            } else {
+                document.body.style.backgroundColor = bg;
+            }
+        });
+    });
+})();
