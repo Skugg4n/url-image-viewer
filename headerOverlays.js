@@ -97,7 +97,9 @@
         imageContainer.appendChild(overlay);
 
         // Update size warning
-        updateInfo();
+        if (typeof updateInfo === 'function') {
+            updateInfo();
+        }
     }
 
     function toggleOverlay(type, button) {
@@ -111,7 +113,9 @@
                 button.classList.remove('active');
                 window.overlayWindowWidth = 0;
                 window.overlayWindowHeight = 0;
-                updateInfo();
+                if (typeof updateInfo === 'function') {
+                    updateInfo();
+                }
             }
         } else {
             currentOverlayType = type;

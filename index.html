@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v3.0</title>
+    <title>Image Viewer v3.1</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,18 +17,20 @@
         <button id="playlistBtn" class="btn">Playlist Artwork</button>
         <button id="mobileHeaderBtn" class="btn">Mobile Header</button>
         <button id="desktopHeaderBtn" class="btn">Desktop Header</button>
+        <!-- Background toggle -->
         <div class="background-toggle">
-            <label>Background:</label>
-            <button class="bg-btn" data-bg="white">White</button>
-            <button class="bg-btn" data-bg="gray">Gray</button>
-            <button class="bg-btn" data-bg="black">Black</button>
-            <button class="bg-btn" data-bg="transparent">Transparent</button>
+            <button class="bg-btn" data-bg="white" title="White"></button>
+            <button class="bg-btn" data-bg="gray" title="Gray"></button>
+            <button class="bg-btn" data-bg="black" title="Black"></button>
+            <button class="bg-btn" data-bg="transparent" title="Transparent"></button>
         </div>
     </div>
     <!-- Zoom slider controls -->
     <div id="zoomControls" class="zoom-controls">
         <input type="range" id="zoomSlider" min="10" max="300" value="100">
     </div>
+    <!-- Copy notification -->
+    <div id="copyNotification" class="copy-notification" style="display: none;">Image URL copied!</div>
     <script src="scripts.js"></script>
     <script src="headerOverlays.js"></script>
 </body>
