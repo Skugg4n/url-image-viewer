@@ -7,6 +7,7 @@ var imageUrl = getQueryParam('imageUrl');
 if (imageUrl) {
     var imageContainer = document.getElementById('imageContainer');
     var zoomPanContainer = document.getElementById('zoomPanContainer');
+    var errorMessage = document.getElementById('errorMessage');
     var img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
@@ -27,50 +28,23 @@ if (imageUrl) {
     function updateInfo() {
         const width = img.naturalWidth;
         const height = img.naturalHeight;
-        let zoomText = `Zoom: ${Math.round(zoomLevel * 100)}%`;
+
+        // Calculate display width
+        let displayedWidth = img.clientWidth * zoomLevel;
+        let zoomPercentage = ((displayedWidth / img.naturalWidth) * 100).toFixed(1);
+
+        let zoomText = `Zoom: ${zoomPercentage}%`;
 
         let transparencyText = imageHasTransparency ? "Image has transparency<br>" : "";
-
-        let sizeWarning = getSizeWarning();
 
         versionInfo.innerHTML = `
             Use zoom slider or Alt + Scroll Wheel to zoom<br>
             Click & drag to pan<br>
             ${zoomText}<br>
             ${transparencyText}
-            ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.1
+            site v3.2
         `;
-    }
-
-    function getSizeWarning() {
-        if (!currentOverlayType) return '';
-        if (overlayWindowWidth === 0 || overlayWindowHeight === 0) return '';
-
-        let requiredWidth;
-        let requiredHeight;
-        if (currentOverlayType === 'playlist') {
-            requiredWidth = 1280;
-            requiredHeight = 1280;
-        } else if (currentOverlayType === 'mobileHeader') {
-            requiredWidth = 750;
-            requiredHeight = 760;
-        } else if (currentOverlayType === 'desktopHeader') {
-            requiredWidth = 2660;
-            requiredHeight = 1496;
-        }
-
-        // Calculate effective image size in the window
-        let scale = zoomLevel * (overlayWindowWidth / window.innerWidth);
-        let effectiveWidth = img.naturalWidth * scale;
-        let effectiveHeight = img.naturalHeight * scale;
-
-        if (effectiveWidth < requiredWidth || effectiveHeight < requiredHeight) {
-            return `<span style="color: red;">Warning: Image resolution may be too low for this overlay.</span><br>`;
-        } else {
-            return '';
-        }
     }
 
     // Update the zoom level based on the slider
@@ -147,10 +121,29 @@ if (imageUrl) {
 
     // When the image is loaded, show dimensions and set the download link
     img.onload = function() {
-        updateInfo(); // Display info immediately when the image loads
+        // Reset zoom level to fit the image to the container
+        let containerAspectRatio = imageContainer.clientWidth / imageContainer.clientHeight;
+        let imageAspectRatio = img.naturalWidth / img.naturalHeight;
+
+        if (imageAspectRatio > containerAspectRatio) {
+            // Image is wider
+            zoomLevel = imageContainer.clientWidth / img.naturalWidth;
+        } else {
+            // Image is taller
+            zoomLevel = imageContainer.clientHeight / img.naturalHeight;
+        }
+
+        zoomSlider.value = (zoomLevel * 100).toFixed(1);
+
+        updateTransform();
+        updateInfo();
         downloadBtn.href = img.src; // Set download link to the image source
-        updateTransform(); // Initialize transform
         checkTransparency(); // Check if image has transparency
+    };
+
+    img.onerror = function() {
+        errorMessage.style.display = 'block';
+        errorMessage.innerText = 'Cannot load image preview.\nUnsupported image format or broken link.';
     };
 
     // Handle copying the image URL to the clipboard

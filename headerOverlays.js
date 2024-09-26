@@ -37,9 +37,9 @@
         } else if (type === 'mobileHeader') {
             aspectRatio = 750 / 760; // 750:760
             if (window.innerWidth < 500) {
-                windowWidth = 350;
+                windowWidth = 300; // Slightly smaller
             } else {
-                windowWidth = 700;
+                windowWidth = 600; // Slightly smaller
             }
             windowHeight = windowWidth / aspectRatio;
         } else if (type === 'desktopHeader') {
@@ -48,7 +48,7 @@
             windowHeight = windowWidth / aspectRatio;
         }
 
-        // Store overlay window dimensions for size warning calculations
+        // Store overlay window dimensions for potential future use
         window.overlayWindowWidth = windowWidth;
         window.overlayWindowHeight = windowHeight;
 
@@ -95,11 +95,6 @@
 
         // Append overlay to imageContainer
         imageContainer.appendChild(overlay);
-
-        // Update size warning
-        if (typeof updateInfo === 'function') {
-            updateInfo();
-        }
     }
 
     function toggleOverlay(type, button) {
@@ -113,9 +108,6 @@
                 button.classList.remove('active');
                 window.overlayWindowWidth = 0;
                 window.overlayWindowHeight = 0;
-                if (typeof updateInfo === 'function') {
-                    updateInfo();
-                }
             }
         } else {
             currentOverlayType = type;
