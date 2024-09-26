@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v2.7</title>
+    <title>Image Viewer v2.8</title>
     <style>
         body, html {
             margin: 0;
@@ -49,7 +49,7 @@
             font-family: 'Arial', sans-serif;
         }
 
-        .download-btn {
+        .btn {
             position: fixed;
             top: 10px;
             right: 10px;
@@ -60,26 +60,35 @@
             text-decoration: none;
             border-radius: 5px;
             cursor: pointer;
+            display: inline-block;
+            margin-right: 10px;
         }
 
-        .download-btn:hover {
+        .btn:hover {
             background-color: #0056b3;
+        }
+
+        #copyBtn {
+            right: 130px;
         }
     </style>
 </head>
 <body>
 
     <div id="imageContainer" class="image-container">
-        <!-- Bilden placeras här via JavaScript -->
+        <!-- Image will be inserted here via JavaScript -->
     </div>
 
-    <!-- Versionsindikator och bildinfo -->
+    <!-- Version info and image details -->
     <div id="versionInfo" class="version">
         Loading...
     </div>
 
-    <!-- Nedladdningsknapp -->
-    <a id="downloadBtn" class="download-btn" href="#" download>Download</a>
+    <!-- Download button -->
+    <a id="downloadBtn" class="btn" href="#" download>Download</a>
+
+    <!-- Copy image URL button -->
+    <button id="copyBtn" class="btn">Copy img URL</button>
 
     <script>
         function getQueryParam(param) {
@@ -95,13 +104,14 @@
             img.alt = 'Image';
             var versionInfo = document.getElementById('versionInfo');
             var downloadBtn = document.getElementById('downloadBtn');
+            var copyBtn = document.getElementById('copyBtn');
 
-            let zoomLevel = 0; // 0 = anpassad, 1 = 100%, 2 = 200%
+            let zoomLevel = 0; // 0 = fit to screen, 1 = 100%, 2 = 200%
             let isDragging = false;
             let startX, startY;
             let translateX = 0, translateY = 0;
 
-            // Uppdatera versionInfo med rätt zoomnivå och storlek
+            // Update versionInfo with correct zoom level and image size
             function updateInfo() {
                 const width = img.naturalWidth;
                 const height = img.naturalHeight;
@@ -118,24 +128,24 @@
                     Click & drag to pan<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    site v2.7
+                    site v2.8
                 `;
             }
 
-            // Hantera dubbelklick för att zooma
+            // Handle double click to zoom
             img.addEventListener('dblclick', function(e) {
                 if (zoomLevel === 0) {
-                    // Zooma in till 100% av bildens naturliga storlek
+                    // Zoom in to 100% of image's natural size
                     zoomLevel = 1;
                     img.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else if (zoomLevel === 1) {
-                    // Zooma in till 200%
+                    // Zoom in to 200%
                     zoomLevel = 2;
                     img.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
                     img.classList.add('zoomed');
                 } else {
-                    // Återgå till anpassad storlek
+                    // Reset to fit-to-screen size
                     zoomLevel = 0;
                     img.style.transform = `scale(1) translate(0px, 0px)`;
                     img.classList.remove('zoomed');
@@ -146,7 +156,7 @@
                 updateInfo();
             });
 
-            // Enkel pan-funktion för att dra runt bilden
+            // Simple pan functionality to drag the image
             img.addEventListener('mousedown', function(e) {
                 if (zoomLevel > 0) {
                     isDragging = true;
@@ -175,11 +185,20 @@
                 img.style.cursor = 'grab';
             });
 
-            // När bilden laddas, visa dimensioner och info samt uppdatera nedladdningslänken
+            // When the image is loaded, show dimensions and set the download link
             img.onload = function() {
-                updateInfo(); // Visa info direkt när bilden laddas
-                downloadBtn.href = img.src; // Sätt länken till nedladdningsknappen
+                updateInfo(); // Display info immediately when the image loads
+                downloadBtn.href = img.src; // Set download link to the image source
             };
+
+            // Handle copying the image URL to the clipboard
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(img.src).then(function() {
+                    alert('Image URL copied to clipboard');
+                }).catch(function(err) {
+                    alert('Failed to copy: ' + err);
+                });
+            });
 
             imageContainer.appendChild(img);
         } else {
