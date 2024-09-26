@@ -58,3 +58,34 @@ img {
 #copyBtn {
     right: 130px;
 }
+.overlay {
+    position: absolute;
+    border: 2px solid rgba(255, 0, 0, 0.7); /* Red overlay border */
+    pointer-events: none; /* Ensure the overlay doesn't block interactions */
+    box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.3); /* Darken the background */
+}
+
+.cover {
+    width: 1280px;
+    height: 1280px;
+}
+
+.mobile-header {
+    width: 750px;
+    height: 760px;
+}
+
+.desktop-header {
+    width: 2660px;
+    height: 1496px;
+}
+
+.overlay-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+}

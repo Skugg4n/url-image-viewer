@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function toggleOverlay(overlay) {
         const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
-        overlays.forEach(o => o.style.display = 'none'); // Dölj alla overlays
-        overlay.style.display = 'block'; // Visa vald overlay
+        overlays.forEach(o => o.style.display = 'none'); // Hide all overlays
+        overlay.style.display = 'block'; // Show the selected overlay
     }
 });
