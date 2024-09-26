@@ -16,9 +16,6 @@ if (imageUrl) {
     var downloadBtn = document.getElementById('downloadBtn');
     var copyBtn = document.getElementById('copyBtn');
     var zoomSlider = document.getElementById('zoomSlider');
-    var currentOverlayType = null;
-    var overlayWindowWidth = 0;
-    var overlayWindowHeight = 0;
     let zoomLevel = 1; // Default zoom level is 1 (100%)
     let isDragging = false;
     let startX, startY;
@@ -44,34 +41,34 @@ if (imageUrl) {
             ${transparencyText}
             ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.3
+            site v3.4
         `;
     }
 
     function getSizeWarning() {
-        if (!currentOverlayType) return '';
-        if (overlayWindowWidth === 0 || overlayWindowHeight === 0) return '';
+        if (!window.currentOverlayType) return '';
+        if (window.overlayWindowWidth === 0 || window.overlayWindowHeight === 0) return '';
 
         let requiredWidth;
         let requiredHeight;
-        if (currentOverlayType === 'playlist') {
+        if (window.currentOverlayType === 'playlist') {
             requiredWidth = 1280;
             requiredHeight = 1280;
-        } else if (currentOverlayType === 'mobileHeader') {
+        } else if (window.currentOverlayType === 'mobileHeader') {
             requiredWidth = 750;
             requiredHeight = 760;
-        } else if (currentOverlayType === 'desktopHeader') {
+        } else if (window.currentOverlayType === 'desktopHeader') {
             requiredWidth = 2660;
             requiredHeight = 1496;
         }
 
         // Calculate effective image size in the window
-        let scale = zoomLevel * (overlayWindowWidth / window.innerWidth);
+        let scale = zoomLevel * (window.overlayWindowWidth / imageContainer.clientWidth);
         let effectiveWidth = img.naturalWidth * scale;
         let effectiveHeight = img.naturalHeight * scale;
 
         if (effectiveWidth < requiredWidth || effectiveHeight < requiredHeight) {
-            return `<span style="color: red;">Warning: Image resolution may be too low for this overlay.</span><br>`;
+            return `<span style="color: red;">Resolution may be too low for this design.</span><br>`;
         } else {
             return '';
         }
@@ -201,12 +198,6 @@ if (imageUrl) {
             notification.style.display = 'none';
         }, 2000); // Hide after 2 seconds
     }
-
-    // Open image in new tab when download button is clicked
-    downloadBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.open(img.src, '_blank');
-    });
 
     zoomPanContainer.appendChild(img);
 } else {
