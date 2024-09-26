@@ -1,32 +1,26 @@
-// Hantering av header overlays
+// Hantera overlay-visning
 document.addEventListener('DOMContentLoaded', function () {
-    const coverOverlay = document.getElementById('coverOverlay');
-    const mobileHeaderOverlay = document.getElementById('mobileHeaderOverlay');
-    const desktopHeaderOverlay = document.getElementById('desktopHeaderOverlay');
+    const playlistBtn = document.getElementById('playlistBtn');
+    const mobileHeaderBtn = document.getElementById('mobileHeaderBtn');
+    const desktopHeaderBtn = document.getElementById('desktopHeaderBtn');
+    const overlayWindow = document.getElementById('overlayWindow');
 
-    document.getElementById('coverBtn').addEventListener('click', () => {
-        toggleOverlay(coverOverlay);
+    // Event Listeners for each button
+    playlistBtn.addEventListener('click', () => {
+        toggleOverlay('playlist');
     });
 
-    document.getElementById('mobileHeaderBtn').addEventListener('click', () => {
-        toggleOverlay(mobileHeaderOverlay);
+    mobileHeaderBtn.addEventListener('click', () => {
+        toggleOverlay('mobile-header');
     });
 
-    document.getElementById('desktopHeaderBtn').addEventListener('click', () => {
-        toggleOverlay(desktopHeaderOverlay);
+    desktopHeaderBtn.addEventListener('click', () => {
+        toggleOverlay('desktop-header');
     });
 
-function toggleOverlay(overlay) {
-    const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
-
-    // If the clicked overlay is already visible, hide it
-    if (overlay.style.display === 'block') {
-        overlay.style.display = 'none';
-    } else {
-        // Hide all overlays and only show the clicked one
-        overlays.forEach(o => o.style.display = 'none');
-        overlay.style.display = 'block';
+    // Function to toggle overlays
+    function toggleOverlay(type) {
+        overlayWindow.style.display = 'block';
+        overlayWindow.className = `overlay-window ${type}`;
     }
-}
-
 });

@@ -6,99 +6,64 @@ body, html {
     background-color: #f0f0f0;
     font-family: 'Arial', sans-serif;
 }
-.image-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    position: relative;
-    cursor: grab;
-}
-img {
-    max-width: 100%;
-    max-height: 100%;
-    transition: transform 0.3s ease;
-    transform-origin: center;
-}
-.zoomed {
-    cursor: grab;
-}
-.version {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px 10px;
-    font-size: 12px;
-    border-radius: 5px;
-    text-align: right;
-    font-family: 'Arial', sans-serif;
-}
-/* General button styling */
+
+/* General styling for buttons */
 .btn {
-    background-color: #000; /* Black background */
-    color: #fff; /* White text */
+    background-color: #000;
+    color: #fff;
     padding: 10px;
     font-size: 14px;
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-right: 10px;
     display: inline-block;
-    margin-bottom: 10px; /* Ensure spacing between buttons */
+    margin-bottom: 10px;
 }
-
 
 .btn:hover {
-    background-color: #333; /* Darker grey on hover */
-}
-#copyBtn {
-    top: 60px; /* Push this button below the Download button */
-    right: 10px;
-}
-.overlay {
-    position: absolute;
-    border: 2px solid rgba(255, 0, 0, 0.7); /* Red overlay border */
-    pointer-events: none; /* Ensure the overlay doesn't block interactions */
-    box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.3); /* Darken the background */
+    background-color: #333;
 }
 
-.cover {
-    width: 1280px;
-    height: 1280px;
+/* Zoom Slider */
+.zoom-slider-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#zoomSlider {
+    width: 300px;
+}
+
+/* Overlay Window */
+.overlay-window {
+    position: absolute;
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    display: none;
+    pointer-events: none;
+}
+
+.overlay-buttons {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Size and aspect ratio for overlays */
+.playlist {
+    width: 100%;
+    height: 100%;
 }
 
 .mobile-header {
-    width: 750px;
-    height: 760px;
+    aspect-ratio: 750 / 760;
+    width: 100%;
 }
 
 .desktop-header {
-    width: 2660px;
-    height: 1496px;
-}
-
-.overlay-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 5px;
-    font-size: 12px;
-}
-#coverBtn {
-    top: 110px; /* Position below Copy Button */
-    right: 10px;
-}
-#mobileHeaderBtn {
-    top: 160px; /* Position below Cover Button */
-    right: 10px;
-}
-
-#desktopHeaderBtn {
-    top: 210px; /* Position below Mobile Header Button */
-    right: 10px;
+    aspect-ratio: 2660 / 1496;
+    width: 100%;
 }
