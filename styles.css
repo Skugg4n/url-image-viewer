@@ -1,5 +1,5 @@
 /* General Styles */
-body, html {
+body {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -7,16 +7,12 @@ body, html {
     font-family: 'Arial', sans-serif;
 }
 
-body {
-    background-color: #f0f0f0; /* default background color */
-}
-
 .image-container {
     width: 100%;
     height: 100%;
     overflow: hidden;
     position: relative;
-    z-index: 1; /* Ensure the image container is above the background */
+    background-color: #f0f0f0; /* default background color */
 }
 
 #zoomPanContainer {
@@ -26,7 +22,6 @@ body {
     cursor: grab;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Ensure the image is above the overlay */
 }
 
 img {
@@ -47,7 +42,6 @@ img {
     text-align: right;
     font-family: 'Arial', sans-serif;
     max-width: 300px;
-    z-index: 5; /* Ensure the version info is above other elements */
 }
 
 .button-container {
@@ -57,7 +51,34 @@ img {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    z-index: 5; /* Ensure buttons are above other elements */
+}
+
+.btn {
+    background-color: #000;
+    color: #fff;
+    padding: 10px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 10px;
+    width: 200px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.btn:hover {
+    background-color: #333;
+}
+
+.btn.active {
+    background-color: #555;
+}
+
+.btn:focus {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
 }
 
 .zoom-controls {
@@ -65,7 +86,10 @@ img {
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 5; /* Ensure zoom controls are above other elements */
+}
+
+#zoomSlider {
+    width: 300px;
 }
 
 .overlay {
@@ -76,7 +100,6 @@ img {
     height: 100%;
     pointer-events: none;
     overflow: hidden;
-    z-index: 3; /* Ensure the overlay is above the image */
 }
 
 .wall {
@@ -85,42 +108,6 @@ img {
     pointer-events: none;
 }
 
-.copy-notification {
-    position: fixed;
-    top: 50px;
-    right: 10px;
-    background-color: #000;
-    color: #fff;
-    padding: 8px 12px;
-    border-radius: 5px;
-    opacity: 0.9;
-    font-size: 14px;
-    z-index: 5; /* Ensure the notification is above other elements */
-}
-
-body.transparent {
-    background: repeating-linear-gradient(
-        45deg,
-        #ccc 0,
-        #ccc 10px,
-        #fff 10px,
-        #fff 20px
-    );
-}
-
-/* Error message styling */
-.error-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #666;
-    font-size: 18px;
-    text-align: center;
-    z-index: 4; /* Ensure the error message is above the overlay */
-}
-
-/* Background toggle buttons */
 .background-toggle {
     margin-top: 10px;
     display: flex;
@@ -136,6 +123,7 @@ body.transparent {
     border-radius: 3px;
     cursor: pointer;
     padding: 0;
+    background-color: #000;
 }
 
 .bg-btn[data-bg="white"] {
@@ -153,7 +141,7 @@ body.transparent {
 .bg-btn[data-bg="transparent"] {
     background: repeating-linear-gradient(
         45deg,
-        #ccc 0,
+        #ccc,
         #ccc 10px,
         #fff 10px,
         #fff 20px
@@ -162,4 +150,37 @@ body.transparent {
 
 .bg-btn.active {
     border: 2px solid #00f;
+}
+
+.copy-notification {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    background-color: #000;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 5px;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+body.transparent {
+    background: repeating-linear-gradient(
+        45deg,
+        #ccc,
+        #ccc 10px,
+        #fff 10px,
+        #fff 20px
+    );
+}
+
+/* Error message styling */
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #666;
+    font-size: 18px;
+    text-align: center;
 }
