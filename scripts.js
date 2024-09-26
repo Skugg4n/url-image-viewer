@@ -13,8 +13,9 @@ if (imageUrl) {
     var versionInfo = document.getElementById('versionInfo');
     var downloadBtn = document.getElementById('downloadBtn');
     var copyBtn = document.getElementById('copyBtn');
+    var zoomSlider = document.getElementById('zoomSlider');
 
-    let zoomLevel = 0; // 0 = fit to screen, 1 = 100%, 2 = 200%
+    let zoomLevel = 1; // Default zoom level is 1 (100%)
     let isDragging = false;
     let startX, startY;
     let translateX = 0, translateY = 0;
@@ -23,16 +24,10 @@ if (imageUrl) {
     function updateInfo() {
         const width = img.naturalWidth;
         const height = img.naturalHeight;
-        let zoomText = "";
-
-        if (zoomLevel === 1) {
-            zoomText = "Zoom: 100%";
-        } else if (zoomLevel === 2) {
-            zoomText = "Zoom: 200%";
-        }
+        let zoomText = `Zoom: ${Math.round(zoomLevel * 100)}%`;
 
         versionInfo.innerHTML = `
-            Double click to zoom<br>
+            Use zoom slider to zoom<br>
             Click & drag to pan<br>
             ${zoomText}<br>
             Img size: ${width} x ${height} px<br>
@@ -40,55 +35,40 @@ if (imageUrl) {
         `;
     }
 
-    // Handle double click to zoom
-    img.addEventListener('dblclick', function(e) {
-        if (zoomLevel === 0) {
-            // Zoom in to 100% of image's natural size
-            zoomLevel = 1;
-            zoomPanContainer.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
-            zoomPanContainer.classList.add('zoomed');
-        } else if (zoomLevel === 1) {
-            // Zoom in to 200%
-            zoomLevel = 2;
-            zoomPanContainer.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
-            zoomPanContainer.classList.add('zoomed');
-        } else {
-            // Reset to fit-to-screen size
-            zoomLevel = 0;
-            zoomPanContainer.style.transform = `scale(1) translate(0px, 0px)`;
-            zoomPanContainer.classList.remove('zoomed');
-            translateX = 0;
-            translateY = 0;
-        }
-
+    // Update the zoom level based on the slider
+    zoomSlider.addEventListener('input', function(e) {
+        zoomLevel = zoomSlider.value / 100; // Slider value is from 100 to 300
+        updateTransform();
         updateInfo();
     });
 
-    // Simple pan functionality to drag the image
-    img.addEventListener('mousedown', function(e) {
-        if (zoomLevel > 0) {
-            isDragging = true;
-            startX = e.clientX - translateX;
-            startY = e.clientY - translateY;
-            zoomPanContainer.style.cursor = 'grabbing';
-            e.preventDefault();
-        }
+    function updateTransform() {
+        zoomPanContainer.style.transform = `scale(${zoomLevel}) translate(${translateX / zoomLevel}px, ${translateY / zoomLevel}px)`;
+    }
+
+    // Pan functionality to drag the image
+    zoomPanContainer.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        startX = e.clientX - translateX;
+        startY = e.clientY - translateY;
+        zoomPanContainer.style.cursor = 'grabbing';
+        e.preventDefault();
     });
 
-    img.addEventListener('mousemove', function(e) {
+    zoomPanContainer.addEventListener('mousemove', function(e) {
         if (isDragging) {
             translateX = e.clientX - startX;
             translateY = e.clientY - startY;
-            zoomPanContainer.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+            updateTransform();
         }
     });
 
-    img.addEventListener('mouseup', function() {
+    zoomPanContainer.addEventListener('mouseup', function() {
         isDragging = false;
         zoomPanContainer.style.cursor = 'grab';
     });
 
-    img.addEventListener('mouseleave', function() {
+    zoomPanContainer.addEventListener('mouseleave', function() {
         isDragging = false;
         zoomPanContainer.style.cursor = 'grab';
     });
@@ -97,6 +77,7 @@ if (imageUrl) {
     img.onload = function() {
         updateInfo(); // Display info immediately when the image loads
         downloadBtn.href = img.src; // Set download link to the image source
+        updateTransform(); // Initialize transform
     };
 
     // Handle copying the image URL to the clipboard
