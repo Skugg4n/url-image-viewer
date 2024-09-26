@@ -32,21 +32,15 @@
             transform-origin: center;
         }
 
-        .zoomed {
-            cursor: grab;
+        .overlay {
+            position: absolute;
+            border: 2px solid red;
+            display: none; /* Start with overlays hidden */
         }
 
-        .version {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 5px;
-            text-align: right;
-            font-family: 'Arial', sans-serif;
+        .desktop-header {
+            width: 2660px;
+            height: 1496px;
         }
 
         .btn {
@@ -61,44 +55,10 @@
             border-radius: 5px;
             cursor: pointer;
             display: inline-block;
-            margin-right: 10px;
         }
 
         .btn:hover {
             background-color: #0056b3;
-        }
-
-        .overlay {
-            position: absolute;
-            border: 2px solid rgba(255, 0, 0, 0.7);
-            pointer-events: none;
-            box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Define the various overlay sizes */
-        .cover {
-            width: 1280px;
-            height: 1280px;
-        }
-
-        .mobile-header {
-            width: 750px;
-            height: 760px;
-        }
-
-        .desktop-header {
-            width: 2660px;
-            height: 1496px;
-        }
-
-        .overlay-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 5px;
-            font-size: 12px;
         }
     </style>
 </head>
@@ -106,111 +66,27 @@
 
     <div id="imageContainer" class="image-container">
         <!-- Image will be inserted here via JavaScript -->
+        <img src="your-image-url.jpg" alt="Loaded Image" />
+        <div class="overlay desktop-header"></div>
     </div>
 
-    <!-- Version info and image details -->
-    <div id="versionInfo" class="version">
-        Loading...
-    </div>
-
-    <!-- Overlay buttons -->
-    <button id="coverBtn" class="btn">Cover (1280x1280)</button>
-    <button id="mobileHeaderBtn" class="btn">Mobile Header (750x760)</button>
-    <button id="desktopHeaderBtn" class="btn">Desktop Header (2660x1496)</button>
-
-    <!-- Overlays -->
-    <div id="coverOverlay" class="overlay cover" style="display:none;">
-        <div class="overlay-info">Cover (1280x1280)</div>
-    </div>
-    <div id="mobileHeaderOverlay" class="overlay mobile-header" style="display:none;">
-        <div class="overlay-info">Mobile Header (750x760)</div>
-    </div>
-    <div id="desktopHeaderOverlay" class="overlay desktop-header" style="display:none;">
-        <div class="overlay-info">Desktop Header (2660x1496)</div>
-    </div>
+    <!-- Button to toggle the desktop header overlay -->
+    <button class="btn" onclick="toggleOverlay('.desktop-header')">Desktop Header</button>
 
     <script>
-        function getQueryParam(param) {
-            var urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        function toggleOverlay(selector) {
+            var overlay = document.querySelector(selector);
+            overlay.style.display = overlay.style.display === 'block' ? 'none' : 'block';
         }
 
-        var imageUrl = getQueryParam('imageUrl');
-        if (imageUrl) {
-            var imageContainer = document.getElementById('imageContainer');
-            var img = document.createElement('img');
-            img.src = imageUrl;
-            img.alt = 'Image';
-            var versionInfo = document.getElementById('versionInfo');
-
-            let zoomLevel = 0; // 0 = fit to screen, 1 = 100%, 2 = 200%
-            let isDragging = false;
-            let startX, startY;
-            let translateX = 0, translateY = 0;
-
-            // Overlay elements
-            const coverOverlay = document.getElementById('coverOverlay');
-            const mobileHeaderOverlay = document.getElementById('mobileHeaderOverlay');
-            const desktopHeaderOverlay = document.getElementById('desktopHeaderOverlay');
-
-            // Buttons for toggling overlays
-            document.getElementById('coverBtn').addEventListener('click', () => {
-                toggleOverlay(coverOverlay);
+        // Initialize the page with correct image properties and event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            var img = document.querySelector('img');
+            img.addEventListener('dblclick', function () {
+                alert('Double-clicked to zoom');
+                // Implement zoom logic here
             });
-
-            document.getElementById('mobileHeaderBtn').addEventListener('click', () => {
-                toggleOverlay(mobileHeaderOverlay);
-            });
-
-            document.getElementById('desktopHeaderBtn').addEventListener('click', () => {
-                toggleOverlay(desktopHeaderOverlay);
-            });
-
-            // Function to toggle overlays
-            function toggleOverlay(overlay) {
-                const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
-                overlays.forEach(o => o.style.display = 'none'); // Hide all overlays
-                overlay.style.display = 'block'; // Show the selected overlay
-            }
-
-            // Simple pan functionality to drag the image
-            img.addEventListener('mousedown', function(e) {
-                if (zoomLevel > 0) {
-                    isDragging = true;
-                    startX = e.clientX - translateX;
-                    startY = e.clientY - translateY;
-                    img.style.cursor = 'grabbing';
-                    e.preventDefault();
-                }
-            });
-
-            img.addEventListener('mousemove', function(e) {
-                if (isDragging) {
-                    translateX = e.clientX - startX;
-                    translateY = e.clientY - startY;
-                    img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
-                }
-            });
-
-            img.addEventListener('mouseup', function() {
-                isDragging = false;
-                img.style.cursor = 'grab';
-            });
-
-            img.addEventListener('mouseleave', function() {
-                isDragging = false;
-                img.style.cursor = 'grab';
-            });
-
-            // When the image is loaded, set the initial view
-            img.onload = function() {
-                imageContainer.appendChild(img);
-            };
-
-            imageContainer.appendChild(img);
-        } else {
-            document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
-        }
+        });
     </script>
 </body>
 </html>
