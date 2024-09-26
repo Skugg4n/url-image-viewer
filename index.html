@@ -99,7 +99,7 @@
                     Click & drag to pan<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    site v2.4
+                    site v2.5
                 `;
             }
 
@@ -142,8 +142,8 @@
             img.addEventListener('mousemove', function(e) {
                 if (isDragging) {
                     // Minska rörelsekänsligheten för att få mjukare pan
-                    velocityX = (e.clientX - startX - translateX) * 1;
-                    velocityY = (e.clientY - startY - translateY) * 1;
+                    velocityX = (e.clientX - startX - translateX) * 2;
+                    velocityY = (e.clientY - startY - translateY) * 2;
 
                     translateX += velocityX;
                     translateY += velocityY;
@@ -171,8 +171,8 @@
                     translateX += velocityX;
                     translateY += velocityY;
 
-                    velocityX *= 0.8; // Minska hastigheten för tröghet
-                    velocityY *= 0.8;
+                    velocityX *= 2; // Minska hastigheten för tröghet
+                    velocityY *= 2;
 
                     img.style.transform = `scale(${zoomLevel === 1 ? img.naturalWidth / img.clientWidth : 2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
 
