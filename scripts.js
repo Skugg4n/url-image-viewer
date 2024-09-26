@@ -27,11 +27,11 @@ if (imageUrl) {
         let zoomText = `Zoom: ${Math.round(zoomLevel * 100)}%`;
 
         versionInfo.innerHTML = `
-            Use zoom slider to zoom<br>
+            Use zoom slider or Alt + Scroll Wheel to zoom<br>
             Click & drag to pan<br>
             ${zoomText}<br>
             Img size: ${width} x ${height} px<br>
-            site v2.8
+            site v2.9
         `;
     }
 
@@ -71,6 +71,20 @@ if (imageUrl) {
     zoomPanContainer.addEventListener('mouseleave', function() {
         isDragging = false;
         zoomPanContainer.style.cursor = 'grab';
+    });
+
+    // Alt + Scroll Wheel zoom functionality
+    imageContainer.addEventListener('wheel', function(e) {
+        if (e.altKey) {
+            e.preventDefault();
+            let delta = e.deltaY > 0 ? -5 : 5; // Adjust zoom speed
+            let newZoomValue = parseInt(zoomSlider.value) + delta;
+            newZoomValue = Math.max(10, Math.min(300, newZoomValue)); // Clamp between 10 and 300
+            zoomSlider.value = newZoomValue;
+            zoomLevel = newZoomValue / 100;
+            updateTransform();
+            updateInfo();
+        }
     });
 
     // When the image is loaded, show dimensions and set the download link

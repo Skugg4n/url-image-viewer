@@ -69,6 +69,15 @@ img {
     background-color: #333;
 }
 
+.btn.active {
+    background-color: #555;
+}
+
+.btn:focus {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+}
+
 .zoom-controls {
     position: fixed;
     bottom: 20px;
@@ -80,7 +89,6 @@ img {
     width: 300px;
 }
 
-/* Overlay styles */
 .overlay {
     position: absolute;
     top: 0;
