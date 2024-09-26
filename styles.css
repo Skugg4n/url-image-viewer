@@ -187,9 +187,9 @@ body {
 
 .corner-logo {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 100px; 
+    bottom: 20px;
+    left: 50px;
+    width: 120px; 
     height: auto;
     z-index: 1000; 
 }
