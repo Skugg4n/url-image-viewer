@@ -6,54 +6,55 @@ body, html {
     background-color: #f0f0f0;
     font-family: 'Arial', sans-serif;
 }
-
-/* General styling for buttons */
+.image-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+    transition: transform 0.3s ease;
+    transform-origin: center;
+}
+.zoomed {
+    cursor: grab;
+}
+.version {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    text-align: right;
+    font-family: 'Arial', sans-serif;
+}
 .btn {
-    background-color: #000;
-    color: #fff;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: #000; /* Black background */
+    color: #fff; /* White text */
     padding: 10px;
     font-size: 14px;
     text-decoration: none;
     border-radius: 5px;
     cursor: pointer;
-    position: fixed;
-    top: 10px;
-    right: 10px;
     display: inline-block;
     margin-right: 10px;
 }
 
 .btn:hover {
-    background-color: #333;
+    background-color: #333; /* Darker grey on hover */
 }
-
-/* Version info container */
-.version {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    text-align: left;
-}
-
-/* Zoom Slider */
-.zoom-slider-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-#zoomSlider {
-    width: 300px;
-}
-
-/* Overlay buttons container */
-.overlay-buttons {
-    position: fixed;
-    top: 10px;
-    right: 120px;
+#copyBtn {
+    right: 130px;
 }

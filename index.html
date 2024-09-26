@@ -3,32 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v3.0</title>
+    <title>Image Viewer v2.9</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="imageContainer" class="image-container">
         <!-- Image will be inserted here via JavaScript -->
     </div>
-
-    <!-- Zoom Slider -->
-    <div class="zoom-slider-container">
-        <input type="range" id="zoomSlider" min="1" max="3" step="0.01" value="1">
-    </div>
-
-    <!-- Version info and image details -->
+    
     <div id="versionInfo" class="version">Loading...</div>
-
-    <!-- Buttons for overlays -->
-    <div class="overlay-buttons">
-        <button id="playlistBtn" class="btn">Playlist Artwork</button>
-        <button id="mobileHeaderBtn" class="btn">Mobile Header</button>
-        <button id="desktopHeaderBtn" class="btn">Desktop Header</button>
-    </div>
-
-    <a id="downloadBtn" class="btn">Download</a>
+    
+    <a id="downloadBtn" class="btn" href="#" download>Download</a>
     <button id="copyBtn" class="btn">Copy img URL</button>
 
+    <!-- Buttons for overlays -->
+    <button id="coverBtn" class="btn">Cover (1280x1280)</button>
+    <button id="mobileHeaderBtn" class="btn">Mobile Header (750x760)</button>
+    <button id="desktopHeaderBtn" class="btn">Desktop Header (2660x1496)</button>
+
+    <!-- Overlays -->
+    <div id="coverOverlay" class="overlay cover" style="display:none;">
+        <div class="overlay-info">Cover (1280x1280)</div>
+    </div>
+    <div id="mobileHeaderOverlay" class="overlay mobile-header" style="display:none;">
+        <div class="overlay-info">Mobile Header (750x760)</div>
+    </div>
+    <div id="desktopHeaderOverlay" class="overlay desktop-header" style="display:none;">
+        <div class="overlay-info">Desktop Header (2660x1496)</div>
+    </div>
+
     <script src="scripts.js"></script>
+    <script src="headerOverlays.js"></script>
 </body>
 </html>
