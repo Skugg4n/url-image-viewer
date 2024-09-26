@@ -69,7 +69,7 @@ if (imageUrl) {
             ${transparencyText}
             ${sizeWarning}
             Img size: ${width} x ${height} px<br>
-            site v3.5
+            site v3.6
         `;
     }
 
