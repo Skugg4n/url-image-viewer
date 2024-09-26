@@ -10,6 +10,7 @@ if (imageUrl) {
     var img = document.createElement('img');
     img.src = imageUrl;
     img.alt = 'Image';
+    var errorMessage = document.getElementById('errorMessage');
     var versionInfo = document.getElementById('versionInfo');
     var downloadBtn = document.getElementById('downloadBtn');
     var copyBtn = document.getElementById('copyBtn');
@@ -174,6 +175,9 @@ if (imageUrl) {
 } else {
     document.getElementById('versionInfo').innerHTML = 'No image URL provided.';
 }
+        // Hide any error message
+        errorMessage.style.display = 'none';
+        img.style.display = 'block';
 
 // Background toggle functionality
 (function() {
@@ -200,3 +204,8 @@ if (imageUrl) {
         });
     });
 })();
+    img.onerror = function() {
+        errorMessage.style.display = 'block';
+        errorMessage.innerText = 'Cannot load image preview.\nUnsupported image format or broken link.';
+        img.style.display = 'none'; // Hide the broken image icon
+    };
