@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer v3.0</title>
+    <title>Image Viewer v2.8</title>
     <style>
         body, html {
             margin: 0;
@@ -68,37 +68,8 @@
             background-color: #0056b3;
         }
 
-        .overlay {
-            position: absolute;
-            border: 2px solid rgba(255, 0, 0, 0.7);
-            pointer-events: none;
-            box-shadow: 0 0 0 10000px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Define the various overlay sizes */
-        .cover {
-            width: 1280px;
-            height: 1280px;
-        }
-
-        .mobile-header {
-            width: 750px;
-            height: 760px;
-        }
-
-        .desktop-header {
-            width: 2660px;
-            height: 1496px;
-        }
-
-        .overlay-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 5px;
-            font-size: 12px;
+        #copyBtn {
+            right: 130px;
         }
     </style>
 </head>
@@ -113,21 +84,11 @@
         Loading...
     </div>
 
-    <!-- Overlay buttons -->
-    <button id="coverBtn" class="btn">Cover (1280x1280)</button>
-    <button id="mobileHeaderBtn" class="btn">Mobile Header (750x760)</button>
-    <button id="desktopHeaderBtn" class="btn">Desktop Header (2660x1496)</button>
+    <!-- Download button -->
+    <a id="downloadBtn" class="btn" href="#" download>Download</a>
 
-    <!-- Overlays -->
-    <div id="coverOverlay" class="overlay cover" style="display:none;">
-        <div class="overlay-info">Cover (1280x1280)</div>
-    </div>
-    <div id="mobileHeaderOverlay" class="overlay mobile-header" style="display:none;">
-        <div class="overlay-info">Mobile Header (750x760)</div>
-    </div>
-    <div id="desktopHeaderOverlay" class="overlay desktop-header" style="display:none;">
-        <div class="overlay-info">Desktop Header (2660x1496)</div>
-    </div>
+    <!-- Copy image URL button -->
+    <button id="copyBtn" class="btn">Copy img URL</button>
 
     <script>
         function getQueryParam(param) {
@@ -142,36 +103,58 @@
             img.src = imageUrl;
             img.alt = 'Image';
             var versionInfo = document.getElementById('versionInfo');
+            var downloadBtn = document.getElementById('downloadBtn');
+            var copyBtn = document.getElementById('copyBtn');
 
             let zoomLevel = 0; // 0 = fit to screen, 1 = 100%, 2 = 200%
             let isDragging = false;
             let startX, startY;
             let translateX = 0, translateY = 0;
 
-            // Overlay elements
-            const coverOverlay = document.getElementById('coverOverlay');
-            const mobileHeaderOverlay = document.getElementById('mobileHeaderOverlay');
-            const desktopHeaderOverlay = document.getElementById('desktopHeaderOverlay');
+            // Update versionInfo with correct zoom level and image size
+            function updateInfo() {
+                const width = img.naturalWidth;
+                const height = img.naturalHeight;
+                let zoomText = "";
 
-            // Buttons for toggling overlays
-            document.getElementById('coverBtn').addEventListener('click', () => {
-                toggleOverlay(coverOverlay);
-            });
+                if (zoomLevel === 1) {
+                    zoomText = "Zoom: 100%";
+                } else if (zoomLevel === 2) {
+                    zoomText = "Zoom: 200%";
+                }
 
-            document.getElementById('mobileHeaderBtn').addEventListener('click', () => {
-                toggleOverlay(mobileHeaderOverlay);
-            });
-
-            document.getElementById('desktopHeaderBtn').addEventListener('click', () => {
-                toggleOverlay(desktopHeaderOverlay);
-            });
-
-            // Function to toggle overlays
-            function toggleOverlay(overlay) {
-                const overlays = [coverOverlay, mobileHeaderOverlay, desktopHeaderOverlay];
-                overlays.forEach(o => o.style.display = 'none'); // Hide all overlays
-                overlay.style.display = 'block'; // Show the selected overlay
+                versionInfo.innerHTML = `
+                    Double click to zoom<br>
+                    Click & drag to pan<br>
+                    ${zoomText}<br>
+                    Img size: ${width} x ${height} px<br>
+                    site v2.8
+                `;
             }
+
+            // Handle double click to zoom
+            img.addEventListener('dblclick', function(e) {
+                if (zoomLevel === 0) {
+                    // Zoom in to 100% of image's natural size
+                    zoomLevel = 1;
+                    img.style.transform = `scale(${img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+                    img.classList.add('zoomed');
+                } else if (zoomLevel === 1) {
+                    // Zoom in to 200%
+                    zoomLevel = 2;
+                    img.style.transform = `scale(${2 * img.naturalWidth / img.clientWidth}) translate(${translateX}px, ${translateY}px)`;
+                    img.classList.add('zoomed');
+                } else {
+                    // Reset to fit-to-screen size
+                    zoomLevel = 0;
+                    img.style.transform = `scale(1) translate(0px, 0px)`;
+                    img.classList.remove('zoomed');
+                    translateX = 0;
+                    translateY = 0;
+                }
+
+                updateInfo();
+            });
 
             // Simple pan functionality to drag the image
             img.addEventListener('mousedown', function(e) {
@@ -202,10 +185,20 @@
                 img.style.cursor = 'grab';
             });
 
-            // When the image is loaded, set the initial view
+            // When the image is loaded, show dimensions and set the download link
             img.onload = function() {
-                imageContainer.appendChild(img);
+                updateInfo(); // Display info immediately when the image loads
+                downloadBtn.href = img.src; // Set download link to the image source
             };
+
+            // Handle copying the image URL to the clipboard
+            copyBtn.addEventListener('click', function() {
+                navigator.clipboard.writeText(img.src).then(function() {
+                    alert('Image URL copied to clipboard');
+                }).catch(function(err) {
+                    alert('Failed to copy: ' + err);
+                });
+            });
 
             imageContainer.appendChild(img);
         } else {
