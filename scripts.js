@@ -37,7 +37,7 @@ if (imageUrl) {
 
     // Update the zoom level based on the slider
     zoomSlider.addEventListener('input', function(e) {
-        zoomLevel = zoomSlider.value / 100; // Slider value is from 100 to 300
+        zoomLevel = zoomSlider.value / 100; // Slider value is from 10 to 300
         updateTransform();
         updateInfo();
     });

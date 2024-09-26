@@ -29,10 +29,6 @@ img {
     object-fit: contain;
 }
 
-.zoomed {
-    cursor: grab;
-}
-
 .version {
     position: fixed;
     bottom: 10px;
@@ -55,8 +51,8 @@ img {
 }
 
 .btn {
-    background-color: #000; /* Black background */
-    color: #fff; /* White text */
+    background-color: #000;
+    color: #fff;
     padding: 10px;
     font-size: 14px;
     text-decoration: none;
@@ -64,15 +60,15 @@ img {
     cursor: pointer;
     display: block;
     margin-bottom: 10px;
-    width: 200px; /* Fixed width for all buttons */
+    width: 200px;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .btn:hover {
-    background-color: #333; /* Darker grey on hover */
+    background-color: #333;
 }
 
-/* Zoom controls */
 .zoom-controls {
     position: fixed;
     bottom: 20px;
@@ -91,28 +87,12 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Allow interaction with underlying elements */
-}
-
-.overlay-frame {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     pointer-events: none;
-    /* Create the "wall with window" effect */
-    background-color: rgba(0, 0, 0, 0.7);
-    /* The window is transparent */
     overflow: hidden;
 }
 
-.overlay-frame::after {
-    content: '';
-    display: block;
-    width: 100%;
-    height: 100%;
-    /* The transparent window */
-    background: transparent;
-    border: 2px dashed red;
-    box-sizing: border-box;
+.wall {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+    pointer-events: none;
 }
