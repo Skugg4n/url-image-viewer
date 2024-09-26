@@ -99,7 +99,7 @@
                     Click & drag to pan<br>
                     ${zoomText}<br>
                     Img size: ${width} x ${height} px<br>
-                    site v2.6
+                    site v2.7
                 `;
             }
 
@@ -142,8 +142,8 @@
             img.addEventListener('mousemove', function(e) {
                 if (isDragging) {
                     // Minska rörelsekänsligheten för att få mjukare pan
-                    velocityX = (e.clientX - startX - translateX) * 2;
-                    velocityY = (e.clientY - startY - translateY) * 2;
+                    velocityX = (e.clientX - startX - translateX) * 0.1;
+                    velocityY = (e.clientY - startY - translateY) * 0.1;
 
                     translateX += velocityX;
                     translateY += velocityY;
